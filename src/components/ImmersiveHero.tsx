@@ -55,6 +55,10 @@ export function ImmersiveHero() {
     .hero-content-4 .hero-copy p{top:56.146%;left:49.306%;width:342px;transform:translateX(-50%)}
     .hero-content-4 .hero-cta{position:absolute;top:64.479%;left:49.306%;display:grid;gap:0;margin:0;transform:translateX(-50%);color:#fff;font:500 13px/18px var(--sans);letter-spacing:.1px;text-align:center;white-space:nowrap}
     .hero-content-4 .hero-cta-arrow{font:500 24px/30px var(--display);letter-spacing:-.2px}
+    .hero-enter-site{position:fixed;z-index:5;bottom:48px;left:50%;display:inline-flex;align-items:center;gap:6px;color:#fff;font:400 13px/18px var(--sans);opacity:.72;transform:translateX(-50%);transition:opacity .28s ease}
+    .hero-enter-site:hover{opacity:1}
+    .hero-enter-site-arrow{display:inline-block;transition:transform .28s ease}
+    .hero-enter-site:hover .hero-enter-site-arrow{transform:translateY(4px)}
   `;
 
   useLayoutEffect(() => {
@@ -72,6 +76,7 @@ export function ImmersiveHero() {
       const backgrounds = gsap.utils.toArray<HTMLElement>("[data-hero-bg]");
       const contents = gsap.utils.toArray<HTMLElement>("[data-hero-content]");
       const dots = gsap.utils.toArray<HTMLElement>("[data-hero-dot]");
+      const enterSite = root.current?.querySelector<HTMLElement>("[data-enter-site]");
       const stageOneCanvas = root.current?.querySelector<HTMLElement>("[data-stage-1-canvas]");
       const stageCanvases = root.current?.querySelectorAll<HTMLElement>("[data-stage-canvas]");
       const landingReveal = document.querySelector<HTMLElement>("[data-landing-reveal]");
@@ -116,6 +121,11 @@ export function ImmersiveHero() {
         const nextStage = time < 20 ? 0 : time < 42 ? 1 : time < 64 ? 2 : 3;
         if (nextStage === activeStage) return;
         activeStage = nextStage;
+        if (enterSite) {
+          enterSite.setAttribute("aria-hidden", String(nextStage !== 0));
+          enterSite.style.pointerEvents = nextStage === 0 ? "auto" : "none";
+          enterSite.style.opacity = nextStage === 0 ? ".72" : "0";
+        }
         dots.forEach((dot, index) => dot.classList.toggle("active", index === nextStage));
         contents.forEach((content, index) => content.setAttribute("aria-hidden", String(index !== nextStage)));
       };
@@ -158,6 +168,7 @@ export function ImmersiveHero() {
   return <section className="hero-scroll" ref={root} aria-label="Geode Labs introduction"><style>{heroVisualStyles}</style><div className="hero-sticky">
     <div className="hero-backgrounds" aria-hidden="true">{heroStages.map((stage, i) => <img key={stage.id} data-hero-bg src={stage.image} alt="" className="hero-background" decoding="async" fetchPriority={i === 0 ? "high" : "auto"} />)}<div className="hero-wash" /></div>
     <div className="hero-progress" aria-label="Hero progress">{heroStages.map((stage, i) => <span key={stage.id} data-hero-dot className={i === 0 ? "hero-dot active" : "hero-dot"} />)}</div>
+    <a className="hero-enter-site" data-enter-site href="#landing"><span>Enter site</span><span className="hero-enter-site-arrow" aria-hidden="true">↓</span></a>
     {heroStages.map((stage, i) => <article key={stage.id} data-hero-content className={`hero-content hero-content-${i + 1}`} aria-hidden={i !== 0}>
       {i === 0 ? <div className="hero-stage-1-canvas" data-stage-1-canvas>
         {stage.mark && <img src={stage.mark} alt="" className="hero-stage-mark" aria-hidden="true" />}
@@ -167,7 +178,7 @@ export function ImmersiveHero() {
         {stage.mark && <img src={stage.mark} alt="" className="hero-stage-mark" aria-hidden="true" />}
         <div className="hero-copy"><h1 className="hero-title">{stage.headline}</h1><p>{stage.body}</p>{stage.cta && <a href="#landing" className="hero-cta"><span>{stage.cta}</span><span className="hero-cta-arrow" aria-hidden="true">↓</span></a>}</div>
         {stage.items?.map((item, itemIndex) => <span key={item.label} className={`hero-item hero-item-${itemIndex}`}>{item.label}</span>)}
-      </div>}
+  </div>}
     </article>)}
   </div></section>;
 }
