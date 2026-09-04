@@ -20,7 +20,7 @@ function Work({
   subtle?: boolean;
   tagList?: string[];
 }) {
-  const media = <img className="work-media" src={image} alt="" />;
+  const media = <img className="work-media" src={image} alt="" loading="lazy" decoding="async" />;
   const copy = (
     <div className="work-copy">
       <span className="eyebrow">{eyebrow}</span>
@@ -125,7 +125,7 @@ export function LandingPage() {
         <div className="container">
           <div className="support-card">
             <div>
-              <img src="/assets/ethereum.svg" alt="Ethereum" />
+              <img src="/assets/ethereum.svg" alt="Ethereum" loading="lazy" decoding="async" />
               <h2>Support the work onchain</h2>
               <p>Donations fund the work.</p>
               <p className="support-note">Works with any Ethereum wallet. Accepts ETH, stablecoins, and other tokens on Ethereum mainnet and L2s.</p>
@@ -140,7 +140,7 @@ export function LandingPage() {
       <footer>
         <div className="container footer-main">
           <div>
-            <img className="footer-logo" src="/assets/geode-logo.png" alt="Geode Labs" />
+            <img className="footer-logo" src="/assets/geode-logo.png" alt="Geode Labs" loading="lazy" decoding="async" />
             <p>Ethereum ecosystem development and product studio.</p>
           </div>
           <div className="footer-links">
